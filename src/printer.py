@@ -210,7 +210,7 @@ PrintThread(thread):
   def _pop_next_job(self):
     if len(self.p.job.list) == 0: return False
     self.p.current_job = self.p.job.list.left_pop()
-    self.fire("job_started", self.current_job)
+    self.p.fire("job_started", self.current_job)
     return True
 
 
