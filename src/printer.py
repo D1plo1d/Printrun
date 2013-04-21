@@ -131,7 +131,7 @@ class Printer(EventEmitter):
       'resend': ('resend', 'rs')
     }
 
-    while(not self._disconnect and self.serial and self.serial.isOpen())
+    while not self._disconnect and self.serial and self.serial.isOpen():
       line = self._readline()
       try:
         line = self.serial.readline().lower().strip()
@@ -187,10 +187,10 @@ class Printer(EventEmitter):
       if not k in sensor_names: continue
       name = sensor_names[k]
       self.sensors[name] = val
-      self.fire("sensor_changed", {'name': sensor_names[k], 'value': val})
+      self.fire("sensor_changed", {'name': name, 'value': val})
 
   def _parse_error_line(self, words, line):
-    self.fire("error", words.join(" "))
+    self.fire("error", " ".join(words) )
 
   def _parse_resend_line(self, words, line):
     # Teststrings for resend parsing       # Firmware     exp. result
@@ -208,7 +208,7 @@ PrintThread(thread):
     self.p = printer
 
   def _pop_next_job(self):
-    if len(self.p.job.list) == 0: return False
+    if not self.p.job.list: return False
     self.p.current_job = self.p.job.list.left_pop()
     self.p.fire("job_started", self.current_job)
     return True
